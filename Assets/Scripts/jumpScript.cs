@@ -8,11 +8,14 @@ public class jumpScript : MonoBehaviour {
 	public AudioClip sonidoVolar;
 	public AudioClip sonidoHerido;
 	public AudioClip sonidoCurar;
+	public int vida = 100;
 	private bool herido = false;
 	Animator animation; //esto es necesario para poder manejar las animaciones
-
+	Animator animation_menu; //esto es necesario para poder manejar las animaciones
+	public GameObject menu;
 	void Start (){ //Al iniciarse cargamos las variables de las animaciones
 				animation = GetComponent <Animator> ();
+				animation_menu = menu.GetComponent <Animator> ();
 		}
 	void Update () {
 				if (Input.GetButtonDown ("Jump")) //Cuando pulsamos espacio salta
@@ -49,7 +52,12 @@ public class jumpScript : MonoBehaviour {
 	void damage () {
 		herido = true;
 				animation.SetBool ("Damage", true);
+		vida = vida - 50;
+		animation_menu.SetInteger ("vida", vida);
 		AudioSource.PlayClipAtPoint (sonidoHerido, transform.position);
+		if (vida <= 0) {
+			Application.LoadLevel("menu");
+				}
 		}
 	/*Funcion mover
 	 * Parametros: fuerza -> Fuerza que le vamos a aplicar para mover
@@ -88,6 +96,7 @@ public class jumpScript : MonoBehaviour {
 		herido = false;
 		animation.SetBool ("Damage", false);
 		AudioSource.PlayClipAtPoint (sonidoCurar, transform.position);
-
+		vida = 100;
+		animation_menu.SetInteger ("vida", vida);
 		}
 }
